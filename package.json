@@ -1,0 +1,20 @@
+{
+  "name": "citrix-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node ./src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "zabbix-sender": "^0.2.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
