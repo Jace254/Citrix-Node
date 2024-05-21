@@ -2,7 +2,9 @@ const Citrix = require('./citrix')
 const sync = require('./synchronous')
 require('dotenv').config()
 var ZabbixSender = require('zabbix-sender');
-var sender = new ZabbixSender();
+var sender = new ZabbixSender({
+    server: '172.16.6.2'
+});
 
 async function main() {
 
@@ -135,10 +137,17 @@ async function main() {
 
 
             logonData.then((d) => {
-                const parsedLogonData = getParsedLogonData(d.value).then((d) => {
+                getParsedLogonData(d.value).then((d) => {
                     data.resources.value.push(d)
-
-                    console.log('data', JSON.stringify(d, null, 2))
+                    sender.send({
+                        'logon_data': d,
+                        }, function(err) {
+                        if (err) {
+                            console.log(err.message)
+                        }
+                        
+                        console.log('Wrote keys to zabbix');
+                        });
                 })
             })
         }
