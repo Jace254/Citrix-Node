@@ -1,10 +1,8 @@
 const Citrix = require('./citrix')
 const sync = require('./synchronous')
 require('dotenv').config()
-var ZabbixSender = require('zabbix-sender');
-var sender = new ZabbixSender({
-    server: '172.16.6.2'
-});
+var exec = require('child_process').exec;
+
 
 async function main() {
 
@@ -34,7 +32,7 @@ async function main() {
             }
         }
         catch (error) {
-            data.errors.auth = error.toString();
+           console.log(error.toString()) 
         }
 
         if (!('auth' in data.errors)) {
@@ -115,7 +113,7 @@ async function main() {
                             ICALatencyInSeconds: l.User.ICALatencyInSeconds,
                             LogonDurationInSeconds: l.LogonDurationInSeconds,
                             MachineName: mch.Name,
-                            DnSName: mch.DnSName,
+                            DnsName: mch.DnsName,
                             HostingServerName: mch.HostingServerName,
                             HostedMachineName: mch.HostedMachineName,
                             OSType: mch.OSType,
@@ -127,40 +125,47 @@ async function main() {
                     }
                 }
 
-                console.log(filteredData.length)
-                const withDates =  await sync([], filteredData, filteredData.length - 1, getDates)
+                console.log('item count', filteredData.length)
+                const withDates = await sync([], filteredData, filteredData.length - 1, getDates)
 
-                const withUser = await sync([], withDates, withDates.length -1, getUser)
+                const withUser = await sync([], withDates, withDates.length - 1, getUser)
 
-                return await sync([], withUser, withUser.length -1, getMachine)
+                return await sync([], withUser, withUser.length - 1, getMachine)
             }
 
 
             logonData.then((d) => {
                 getParsedLogonData(d.value).then((d) => {
                     data.resources.value.push(d)
-                    sender.send({
-                        'logon_data': d,
-                        }, function(err) {
-                        if (err) {
-                            console.log(err.message)
+
+                    const object = d.reduce((acc, currentValue, index) => {
+                        acc[index] = currentValue;
+                        return acc;
+                      }, {});
+
+                    console.log(object)
+
+                    const command = `/usr/bin/zabbix_sender -c /etc/zabbix/zabbix_agentd.conf -k logon_data -o \'${JSON.stringify(object)}\'`;
+
+                    exec(command, (error, stdout, stderr) => {
+                        if (error) {
+                            console.error(`exec error: ${error}`);
+                            return;
                         }
-                        
-                        console.log('Wrote keys to zabbix');
-                        });
+                        console.log(`stdout: ${stdout}`);
+                        if (!stderr) {
+                            console.log('Sent data to zabbix');
+                        } else {
+                            console.error(`stderr: ${stderr}`);
+                        }
+                    });
                 })
             })
         }
     }
     catch (error) {
-        data.errors.params = error.toString();
+        console.log(error.toString)
     }
-
-    return JSON.stringify(data, null, 2)
 }
 
 main()
-
-
-
-

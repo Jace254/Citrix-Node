@@ -8,9 +8,6 @@ dependencies:
   axios:
     specifier: ^1.6.8
     version: 1.6.8
-  zabbix-sender:
-    specifier: ^0.2.0
-    version: 0.2.0
 
 devDependencies:
   dotenv:
@@ -83,8 +80,4 @@ packages:
 
   /proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
-    dev: false
-
-  /zabbix-sender@0.2.0:
-    resolution: {integrity: sha512-XqH5e4rrKYf4BmfXewcBhfTXAOK7/UM3zkA8Tz5o9IEoB1K523wibXrhafX7n8QS3dgI00qNd6qcQEw2Zp/tuQ==}
     dev: false
