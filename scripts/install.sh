@@ -6,6 +6,12 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Check if npm is installed
+if ! command -v npm &> /dev/null; then
+    echo "npm is not installed. Please install npm before running this script."
+    exit 1
+fi
+
 # Clone the repository
 echo "-------> Cloning the repository"
 git clone https://github.com/Jace254/Citrix-Node.git
@@ -13,6 +19,8 @@ git clone https://github.com/Jace254/Citrix-Node.git
 # Move the cloned repository to the desired location
 echo "-------> Moving the repository to /var/www/html/scripts/citrix-node"
 mv Citrix-Node /var/www/html/scripts/citrix-node
+npm i -g pnpm
+cd /var/www/html/scripts/citrix-node && pnpm i
 
 # Give execute permission to the script and then add to /usr/local/bin
 echo "-------> Adding get_logon_data to global scope"
