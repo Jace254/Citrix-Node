@@ -68,4 +68,4 @@ echo "-----> Customer ID: ${CUSTOMER_ID}"
 export client_id="$CLIENT_ID" client_secret="$CLIENT_SECRET" customer_id="$CUSTOMER_ID" logon_duration="$LOGON_DURATION"
 
 # Run the script with exported variables
-node ./src/logon_data.js
+node "/var/www/html/scripts/citrix-node/src/logon_data.js"
