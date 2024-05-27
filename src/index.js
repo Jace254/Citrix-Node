@@ -5,9 +5,6 @@ var exec = require('child_process').exec;
 const fs = require('fs');
 
 
-
-
-
 async function main() {
     const lockFilePath = 'isRunning.lock';
 
@@ -43,6 +40,7 @@ async function main() {
             }
             catch (error) {
                 console.log(error.toString())
+                fs.unlinkSync(lockFilePath);
             }
 
             if (!('auth' in data.errors)) {
@@ -177,6 +175,7 @@ async function main() {
         }
         catch (error) {
             console.log(error.toString)
+            fs.unlinkSync(lockFilePath);
         }
     }
 }
