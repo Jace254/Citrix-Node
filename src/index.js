@@ -34,6 +34,8 @@ async function main() {
 
                 if ('access_token' in result) {
                     citrix.token = result['access_token'];
+                    const me = await citrix.request(" https://api.cloud.com/cvad/manage/me")
+                    citrix.siteId = me.Customers[0].Sites[0].Id;
                 } else {
                     throw 'Auth response does not contain access token.';
                 }

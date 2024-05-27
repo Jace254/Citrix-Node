@@ -4,6 +4,7 @@ class Citrix {
     constructor(params) {
         this.params = params;
         this.token = null;
+        this.siteId = null;
     }
 
     setParams(params) {
@@ -27,7 +28,7 @@ class Citrix {
 
             if (typeof url === 'string' && url.includes('/cvad/manage/')) {
                 if (!url.includes('/me')) {
-                    headers['Citrix-InstanceId'] = this.params.siteId;
+                    headers['Citrix-InstanceId'] = this.siteId;
                 }
             }
         }

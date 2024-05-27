@@ -1,14 +1,16 @@
 #!/bin/bash
+LOGON_DURATION=10
 
 show_help() {
   echo ""
-  echo "Usage: $0 -c <client_id> -s <client_secret> -u <customer_id>"
+  echo "Usage: $0 -c <client_id> -s <client_secret> -u <customer_id> [-l <logon_duration>]"
   echo ""
   echo "Options:"
   echo "  -c <client_id>        Specify the client ID."
-  echo "  -l <client_secret>    Specify the client secret."
+  echo "  -s <client_secret>    Specify the client secret."
   echo "  -u <customer_id>      Specify the customer ID."
-  echo "  -h, --help            Show this help message and exit."
+  echo "  -l <logon_duration>   Specify the logon duration period for the script."
+  echo "  -h, --help            Show this help message."
   echo ""
 }
 
@@ -21,11 +23,17 @@ for arg in "$@"; do
   esac
 done
 
-while getopts ":c:s:u:h" opt; do
+while getopts ":c:s:u:l:h" opt; do
   case $opt in
     c) CLIENT_ID="$OPTARG" ;;
     s) CLIENT_SECRET="$OPTARG" ;;
     u) CUSTOMER_ID="$OPTARG" ;;
+    l) LOGON_DURATION="$OPTARG"
+    if ! [[ "$LOGON_DURATION" =~ ^[0-9]+$ ]]; then
+        echo "Error: logon_duration must be a number."
+        exit 1
+      fi
+    ;;
     \?) echo "Invalid option: -$OPTARG" >&2; exit 1 ;;
     :) echo "Option -$OPTARG requires an argument." >&2; show_help; exit 1 ;;
   esac
@@ -55,7 +63,7 @@ echo "-----> Client Secret: ${CLIENT_SECRET}"
 echo "-----> Customer ID: ${CUSTOMER_ID}"
 
 # Export all variables (lowercase for consistency)
-export client_id="$CLIENT_ID" client_secret="$CLIENT_SECRET" customer_id="$CUSTOMER_ID"
+export client_id="$CLIENT_ID" client_secret="$CLIENT_SECRET" customer_id="$CUSTOMER_ID" logon_duration="$LOGON_DURATION"
 
 # Run the script with exported variables
 node ./src/index.js
