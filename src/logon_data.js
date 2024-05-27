@@ -4,10 +4,9 @@ require('dotenv').config()
 var exec = require('child_process').exec;
 const fs = require('fs');
 
+const lockFilePath = 'isRunning.lock';
 
 async function main() {
-    const lockFilePath = 'isRunning.lock';
-
     if (fs.existsSync(lockFilePath)) {
         console.error('Script already running!');
     } else {
@@ -183,3 +182,17 @@ async function main() {
 }
 
 main()
+
+// Listen for SIGINT (CTRL+C)
+process.on('SIGINT', () => {
+    console.log('Caught interrupt signal (SIGINT).');
+    fs.unlinkSync(lockFilePath);
+    process.exit(1)
+});
+
+// Optionally, listen for SIGTERM
+process.on('SIGTERM', () => {
+    console.log('Caught terminate signal (SIGTERM).');
+    fs.unlinkSync(lockFilePath);
+    process.exit(1)
+});
