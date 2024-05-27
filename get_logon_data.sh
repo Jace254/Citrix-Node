@@ -1,5 +1,5 @@
 #!/bin/bash
-LOGON_DURATION=10
+LOGON_DURATION=0
 
 show_help() {
   echo ""
@@ -10,7 +10,7 @@ show_help() {
   echo "  -s <client_secret>    Specify the client secret."
   echo "  -u <customer_id>      Specify the customer ID."
   echo "  -l <logon_duration>   Specify the logon duration period for the script."
-  echo "                        Default is 10 seconds"
+  echo "                        Default is 0 seconds"
   echo ""
   echo "  -h, --help            Show this help message."
   echo ""
@@ -44,19 +44,19 @@ done
 # Check for required arguments
 if [ -z "$CLIENT_ID" ]; then
   echo "!!!!!! Please provide the client_id with the -c flag."
-  echo "Usage: $0 -c <client_id> -s <client_secret> -u <customer_id>"
+  show_help
   exit 1
 fi
 
 if [ -z "$CLIENT_SECRET" ]; then
   echo "!!!!!! Please provide the client_secret with the -s flag."
-  echo "Usage: $0 -c <client_id> -s <client_secret> -u <customer_id>"
+  show_help
   exit 1
 fi
 
 if [ -z "$CUSTOMER_ID" ]; then
   echo "!!!!!! Please provide the customer_id with the -u flag."
-  echo "Usage: $0 -c <client_id> -s <client_secret> -u <customer_id>"
+  show_help
   exit 1
 fi
 
