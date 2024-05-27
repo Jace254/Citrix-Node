@@ -10,6 +10,8 @@ show_help() {
   echo "  -s <client_secret>    Specify the client secret."
   echo "  -u <customer_id>      Specify the customer ID."
   echo "  -l <logon_duration>   Specify the logon duration period for the script."
+  echo "                        Default is 10 seconds"
+  echo ""
   echo "  -h, --help            Show this help message."
   echo ""
 }

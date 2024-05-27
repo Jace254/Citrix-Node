@@ -23,7 +23,7 @@ async function main() {
 
         try {
             console.log('setting params')
-            citrix.setParams({ client_id: process.env.client_id, client_secret: process.env.client_secret, customer_id: process.env.customer_id, siteId: process.env.siteId, logon_duration: Number(process.env.logon_duration) })
+            citrix.setParams({ client_id: process.env.client_id, client_secret: process.env.client_secret, customer_id: process.env.customer_id, logon_duration: Number(process.env.logon_duration) })
 
             try {
                 console.log('getting token')
