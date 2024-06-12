@@ -32,6 +32,7 @@ git clone https://github.com/Jace254/Citrix-Node.git
 
 # Move the cloned repository to the desired location
 echo "-------> Moving the repository to /var/www/html/scripts/citrix-node"
+mkdir /var/www/html/scripts
 mv Citrix-Node /var/www/html/scripts/citrix-node
 cd /var/www/html/scripts/citrix-node && pnpm install
 
