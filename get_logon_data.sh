@@ -11,6 +11,7 @@ show_help() {
   echo "  -u <customer_id>      Specify the customer ID."
   echo "  -l <logon_duration>   Specify the logon duration period for the script."
   echo "                        Default is 0 seconds"
+  echo "  -p <citrix_host>      Specify the HOST to use"
   echo ""
   echo "  -h, --help            Show this help message."
   echo ""
@@ -25,11 +26,12 @@ for arg in "$@"; do
   esac
 done
 
-while getopts ":c:s:u:l:h" opt; do
+while getopts ":c:s:u:l:p:h" opt; do
   case $opt in
     c) CLIENT_ID="$OPTARG" ;;
     s) CLIENT_SECRET="$OPTARG" ;;
     u) CUSTOMER_ID="$OPTARG" ;;
+    p) CITRIX_HOST="$OPTARG" ;;
     l) LOGON_DURATION="$OPTARG"
     if ! [[ "$LOGON_DURATION" =~ ^[0-9]+$ ]]; then
         echo "Error: logon_duration must be a number."
@@ -60,12 +62,14 @@ if [ -z "$CUSTOMER_ID" ]; then
   exit 1
 fi
 
+
 echo "-----> Client ID: ${CLIENT_ID}"
 echo "-----> Client Secret: ${CLIENT_SECRET}"
 echo "-----> Customer ID: ${CUSTOMER_ID}"
+echo "-----> Citrix HOST: ${CITRIX_HOST}"
 
 # Export all variables (lowercase for consistency)
-export client_id="$CLIENT_ID" client_secret="$CLIENT_SECRET" customer_id="$CUSTOMER_ID" logon_duration="$LOGON_DURATION"
+export client_id="$CLIENT_ID" client_secret="$CLIENT_SECRET" customer_id="$CUSTOMER_ID" logon_duration="$LOGON_DURATION" citrix_host="$CITRIX_HOST"
 
 # Run the script with exported variables
 node "/var/www/html/scripts/citrix-node/src/logon_data.js"

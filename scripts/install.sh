@@ -6,10 +6,24 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# Check if npm is installed
-if ! command -v npm &> /dev/null; then
-    echo "npm is not installed. Please install npm before running this script."
-    exit 1
+# Check if nvm is installed
+if ! command -v nvm &> /dev/null; then
+    echo "nvm is not installed. Installing nvm..."
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+    # Activate nvm
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+fi
+
+# Install Node.js and npm using nvm
+echo "-------> Installing Node.js and npm using nvm..."
+nvm install node
+
+# Check if pnpm is installed
+if ! command -v pnpm &> /dev/null; then
+    echo "pnpm is not installed. Installing pnpm..."
+    npm install -g pnpm
 fi
 
 # Clone the repository
@@ -19,8 +33,7 @@ git clone https://github.com/Jace254/Citrix-Node.git
 # Move the cloned repository to the desired location
 echo "-------> Moving the repository to /var/www/html/scripts/citrix-node"
 mv Citrix-Node /var/www/html/scripts/citrix-node
-npm i -g pnpm
-cd /var/www/html/scripts/citrix-node && pnpm i
+cd /var/www/html/scripts/citrix-node && pnpm install
 
 # Give execute permission to the script and then add to /usr/local/bin
 echo "-------> Adding get_logon_data to global scope"

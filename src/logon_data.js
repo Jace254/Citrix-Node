@@ -146,15 +146,50 @@ async function main() {
                 logonData.then((d) => {
                     getParsedLogonData(d.value).then((d) => {
                         data.resources.value.push(d)
+                        const new_array = d.reduce((acc, current) => {
+                            const existingUser = acc.find(user => user.UserName === current.UserName);
+                            if (existingUser) {
+                              existingUser.data.push({
+                                ICALatencyInSeconds: current.ICALatencyInSeconds,
+                                LogonDurationInSeconds: current.LogonDurationInSeconds,
+                                MachineName: current.MachineName,
+                                DnsName: current.DnsName,
+                                HostingServerName: current.HostingServerName,
+                                HostedMachineName: current.HostedMachineName,
+                                OSType: current.OSType,
+                              });
+                            } else {
+                              acc.push({
+                                UserName: current.UserName,
+                                UserId: current.UserId,
+                                FullName: current.FullName,
+                                data: [
+                                  {
+                                    ICALatencyInSeconds: current.ICALatencyInSeconds,
+                                    LogonDurationInSeconds: current.LogonDurationInSeconds,
+                                    MachineName: current.MachineName,
+                                    DnsName: current.DnsName,
+                                    HostingServerName: current.HostingServerName,
+                                    HostedMachineName: current.HostedMachineName,
+                                    OSType: current.OSType,
+                                  },
+                                ],
+                              });
+                            }
 
-                        const object = d.reduce((acc, currentValue, index) => {
-                            acc[index] = currentValue;
+                            return acc;
+                        }, []);
+
+                        const object = new_array.reduce((acc, currentValue, index) => {
+                            acc[index] = {...currentValue, data: currentValue.data.reduce((acc, curr, index) => { 
+                                acc[index] = curr 
+                                return acc
+                            }, {})};
                             return acc;
                         }, {});
 
-                        console.log(object)
 
-                        const command = `/usr/bin/zabbix_sender -c /etc/zabbix/zabbix_agentd.conf -k logon_data -o \'${JSON.stringify(object)}\'`;
+                        const command = `/usr/bin/zabbix_sender -c /etc/zabbix/zabbix_agentd.conf -s ${process.env.citrix_host} -k logon_data -o \'${JSON.stringify(object)}\'`;
 
                         exec(command, (error, stdout, stderr) => {
                             if (error) {
